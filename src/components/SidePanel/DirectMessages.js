@@ -7,6 +7,7 @@ import  {Menu, Icon} from "semantic-ui-react";
 
 class DirectMessages extends React.Component {
     state = {
+      activeChannel: '',
       user: this.props.currentUser,
       users: [],
       usersRef: firebase.database().ref('users'),
@@ -25,14 +26,14 @@ class DirectMessages extends React.Component {
         this.state.usersRef.on('child_added',snap => {
             if(currentUserUid !== snap.key){
                 let user = snap.val();
-                user['uid'] = snap.key;
-                user['status'] = 'offline';
+                user["uid"] = snap.key;
+                user["status"] = "offline";
                 loadedUsers.push(user);
                 this.setState({users: loadedUsers});
             }
         });
 
-        this.state.connectedRef.on('value', snap => {
+        this.state.connectedRef.on("value", snap => {
             if(snap.val() === true ){
                 const ref = this.state.presenceRef.child(currentUserUid);
                 ref.set(true);
@@ -40,11 +41,11 @@ class DirectMessages extends React.Component {
                     if(err !== null){
                         console.error(err);
                     }
-                })
+                });
             }
         });
 
-        this.state.presenceRef.on('child_added', snap=> {
+        this.state.presenceRef.on("child_added", snap=> {
             if(currentUserUid !== snap.key){
                 // add status to user
                 this.addStatusToUser(snap.key);
@@ -63,14 +64,14 @@ class DirectMessages extends React.Component {
     addStatusToUser = (userId, connected = true) => {
         const updatedUsers = this.state.users.reduce((acc,user) => {
             if(user.uid ===userId ){
-                user['status'] = `${connected ? 'online' : 'offline'}`;
+                user["status"] = `${connected ? "online" : "offline"}`;
             }
             return acc.concat(user);
-        },[])
+        },[]);
         this.setState({users:updatedUsers});
     };
 
-    isUserOnline = user => user.status === 'online';
+    isUserOnline = user => user.status === "online";
 
     changeChannel = user => {
         const channelId = this.getChannelId(user.uid);
@@ -82,7 +83,7 @@ class DirectMessages extends React.Component {
         this.props.setPrivateChannel(true);
     };
 
-    getChannelId = user => {
+    getChannelId = userId => {
         const currentUserId = this.state.user.uid;
         return userId < currentUserId ?
             `${userId}/${currentUserId}` : `${currentUserId}/${userId}`;
