@@ -10,6 +10,7 @@ import ProgressBar from "./ProgressBar";
 class MessageForm extends React.Component {
     state = {
       uploadState: '',
+      typingRef: firebase.database().ref('typing'),
       percentUploaded: 0,
       storageRef: firebase.storage().ref(),
       uploadTask: null,
@@ -28,6 +29,25 @@ class MessageForm extends React.Component {
 
     handleChange = event =>{
         this.setState({[event.target.name]: event.target.value});
+    };
+
+    handleKeyDown = () => {
+        const {message, typingRef,channel,user } = this.state
+
+        if(message) {
+            typingRef
+                .child(channel.id)
+                .child(user.id)
+                .set(user.displayName)
+        }
+        else{
+            typingRef
+                .child(channel.id)
+                .child(user.id)
+                .remove()
+
+        }
+
     };
 
     createMessage = (fileUrl = null) => {
@@ -50,7 +70,7 @@ class MessageForm extends React.Component {
 
     sendMessage = () =>{
       const {getMessagesRef} = this.props;
-      const {message, channel} = this.state;
+      const {message, channel, user, typingRef} = this.state;
 
       if(message) {
         this.setState({loading: true});
@@ -59,7 +79,12 @@ class MessageForm extends React.Component {
             .push()
             .set(this.createMessage())
             .then(() => {
-                this.setState({loading: false, message: '',errors:[]})
+                this.setState({loading: false, message: '',errors:[]});
+                typingRef
+                    .child(channel.id)
+                    .child(user.id)
+                    .remove()
+
             })
             .catch(err =>{
                 console.error(err);
@@ -150,6 +175,7 @@ class MessageForm extends React.Component {
                 fluid
                 name="message"
                 onChange={this.handleChange}
+                onKeyDown={this.handleKeyDown}
                 value={message}
                 style={{marginBottom: '0.7em'}}
                 label={<Button icon={'add'}/>}
