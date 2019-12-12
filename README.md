@@ -1,3 +1,7 @@
+## [Slack Channel Link](https://join.slack.com/t/devpeepsworkspace/shared_invite/enQtODExNDEzNDI1OTA5LTYyZTdjNjZiN2Q0NjllYzMzZWM3MWUwYjA2YWQ4MjVhYjMzZWMwZjc1MjQzMzdiOTZiYmY2NTM1YTMyMjQxZDE)
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
