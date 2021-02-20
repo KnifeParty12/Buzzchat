@@ -48,8 +48,7 @@ const mapStateFromProps = state => ({
 });
 
 
-const RootWithAuth = withRouter
-(connect(
+const RootWithAuth = withRouter(connect(
     mapStateFromProps,
     { setUser, clearuser }
     )(Root));

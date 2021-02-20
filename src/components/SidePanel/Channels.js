@@ -250,6 +250,4 @@ class Channels extends React.Component {
     }
 }
 
-export default connect(null,
-    {setCurrentChannel,setPrivateChannel})
-(Channels);
+export default connect(null,{setCurrentChannel,setPrivateChannel})(Channels);
